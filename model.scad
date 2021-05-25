@@ -1,9 +1,6 @@
-if($preview) {
-  $fn=100;
- } else {
-  $fn = 500;
- }
-  
+$fn = 500;
+echo("Number of facets:", $fn);
+
 HAUTEUR = 46;
 LONGUEUR = HAUTEUR;
 HYPOTHENUSE = sqrt(HAUTEUR*HAUTEUR + LONGUEUR*LONGUEUR);
@@ -14,6 +11,7 @@ BRANCHE_PETIT_TROU = 5;
 BRANCHE_GRAND_TROU = 9;
 BRANCHE_SEPARATION = 8;
   
+TETE_ANGLE = 30; 
 TETE_HAUTEUR = 13;
 TETE_LARGEUR = 40;
 TETE_LONGUEUR = 8;
@@ -64,21 +62,20 @@ module branch_side(ecrou)
 module branch() {
   difference() {
     union() {
-      translate([0, TETE_LARGEUR/2+BRANCHE_SEPARATION/2, 0])
+      translate([0, BRANCHE_SEPARATION/2, 0])
 	branch_side(ecrou=true);
     
       translate([0,
-		 TETE_LARGEUR/2-BRANCHE_EPAISSEUR-BRANCHE_SEPARATION/2, 0])
+		 -BRANCHE_EPAISSEUR-BRANCHE_SEPARATION/2, 0])
 	branch_side(ecrou=false);
           
       translate([HYPOTHENUSE/2,
-		 TETE_LARGEUR/2-BRANCHE_SEPARATION/2-1, 0])
+		 -BRANCHE_SEPARATION/2-1, 0])
 	cube([HYPOTHENUSE/2, BRANCHE_SEPARATION+2, BRANCHE_HAUTEUR]);
     }
 
-    translate([0
-      , TETE_LARGEUR/2-BRANCHE_EPAISSEUR-BRANCHE_SEPARATION/2 - 1, -17])
-      rotate([0,-8, 0])
+    translate([0, -BRANCHE_EPAISSEUR-BRANCHE_SEPARATION/2 - 1, -17])
+      rotate([0,-9, 0])
       cube([HYPOTHENUSE * 2, 2*BRANCHE_EPAISSEUR + BRANCHE_SEPARATION + 2,BRANCHE_HAUTEUR+2]);
 }
 }
@@ -108,22 +105,12 @@ module tete() {
     
     translate([-ERGOT_X, ERGOT_Y, 0])
       ergot();
-}
+  }
 }
     
-difference() {
-  union() {
-    branch();
-    translate([HYPOTHENUSE, 0, 0])
-      rotate([90,0,90])
-      tete();
-  }
-        
-  // TUBE
-  * translate([HYPOTHENUSE, 0, 0])
-    rotate([0, -45, 0])
-    translate([-TETE_LONGUEUR, TETE_LARGEUR/2, 0])
-    rotate([0, 90, 0])
-    cylinder(d=TETE_TUBE, h=TETE_LONGUEUR*3);
+union() {
+  branch();
+  translate([0.9 * HYPOTHENUSE, 0, 1.3 * TETE_HAUTEUR])
+    rotate([90 - TETE_ANGLE,0,90])
+    tete();
 }
-
