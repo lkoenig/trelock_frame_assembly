@@ -5,3 +5,8 @@ https://www.trelock.com/en/light/lights/spare-parts-light/brackets-dynamo-e-bike
 
 # Bolt holding the lamp
 Bolt is 8mm
+
+# TODO
+
+  - Export the embout.dxf from the FreeCAD design
+  - Correct the y offset on the embout.

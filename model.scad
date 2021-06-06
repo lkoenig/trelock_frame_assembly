@@ -1,12 +1,11 @@
 $fn = 500;
-echo("Number of facets:", $fn);
 
 HAUTEUR = 46;
 LONGUEUR = HAUTEUR;
 HYPOTHENUSE = sqrt(HAUTEUR*HAUTEUR + LONGUEUR*LONGUEUR);
 
 BRANCHE_EPAISSEUR = 6.5;
-BRANCHE_HAUTEUR = 13;
+BRANCHE_HAUTEUR = 15;
 BRANCHE_PETIT_TROU = 5;
 BRANCHE_GRAND_TROU = 9;
 BRANCHE_SEPARATION = 8;
@@ -14,7 +13,7 @@ BRANCHE_SEPARATION = 8;
 BOULON_EPAISSEUR = 4;
 
 TETE_EPAISSEUR = 7;
-TETE_ANGLE = 30; 
+TETE_ANGLE = 45; 
 TETE_HAUTEUR = 13;
 TETE_LARGEUR = 40;
 TETE_LONGUEUR = 8;
@@ -95,12 +94,12 @@ module ergot()
 }
   
 module tete() {
-  ERGOT_X = 9.75;
-  ERGOT_Y = -7.35;
+  ERGOT_X = 9;
+  ERGOT_Y = 0;
   translate([0, 0, TETE_EPAISSEUR])
     union() {
 
-    translate([0,0,-TETE_EPAISSEUR])
+    translate([0,7.6,-TETE_EPAISSEUR])
       linear_extrude(height=TETE_EPAISSEUR, center=false)
       import("embout.dxf");
 
@@ -110,11 +109,15 @@ module tete() {
     translate([-ERGOT_X, ERGOT_Y, 0])
       ergot();
   }
-}
+} 
     
 union() {
   branch();
-  translate([HYPOTHENUSE - 2 * TETE_EPAISSEUR * sin(TETE_ANGLE), 0, 1.3 * TETE_HAUTEUR])
+  translate([
+	     HYPOTHENUSE - TETE_EPAISSEUR / 2 * sin(TETE_ANGLE),
+	     0,
+	     BRANCHE_HAUTEUR - TETE_HAUTEUR/4
+	     ])
     rotate([90 - TETE_ANGLE,0,90])
     tete();
 }
