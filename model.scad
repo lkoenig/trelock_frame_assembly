@@ -4,13 +4,16 @@ echo("Number of facets:", $fn);
 HAUTEUR = 46;
 LONGUEUR = HAUTEUR;
 HYPOTHENUSE = sqrt(HAUTEUR*HAUTEUR + LONGUEUR*LONGUEUR);
-  
+
 BRANCHE_EPAISSEUR = 6.5;
 BRANCHE_HAUTEUR = 13;
 BRANCHE_PETIT_TROU = 5;
 BRANCHE_GRAND_TROU = 9;
 BRANCHE_SEPARATION = 8;
-  
+
+BOULON_EPAISSEUR = 4;
+
+TETE_EPAISSEUR = 7;
 TETE_ANGLE = 30; 
 TETE_HAUTEUR = 13;
 TETE_LARGEUR = 40;
@@ -42,13 +45,15 @@ module branch_side(ecrou)
       translate([BRANCHE_GRAND_TROU/2+BRANCHE_PETIT_TROU/2,
 		 BRANCHE_EPAISSEUR + 1, BRANCHE_HAUTEUR/2])
 	rotate([90, 0, 0])
-	cylinder(h=BRANCHE_EPAISSEUR/2, d=BRANCHE_GRAND_TROU, $fn=6);
+	cylinder(h=BOULON_EPAISSEUR + 1, d=BRANCHE_GRAND_TROU, $fn=6);
     } else {
       // grand trou rond
-      translate([BRANCHE_GRAND_TROU/2+BRANCHE_PETIT_TROU/2,
-		 BRANCHE_EPAISSEUR/2-1, BRANCHE_HAUTEUR/2])
+      translate([
+	BRANCHE_GRAND_TROU / 2 + BRANCHE_PETIT_TROU / 2,
+	  BRANCHE_EPAISSEUR / 2 + 1 ,
+	  BRANCHE_HAUTEUR / 2])
 	rotate([90, 0, 0])
-	cylinder(h=BRANCHE_EPAISSEUR/2, d=BRANCHE_GRAND_TROU);
+	cylinder(h=BOULON_EPAISSEUR + 1, d=BRANCHE_GRAND_TROU);
     }
           
     // petit trou
@@ -90,7 +95,6 @@ module ergot()
 }
   
 module tete() {
-  TETE_EPAISSEUR = 7;
   ERGOT_X = 9.75;
   ERGOT_Y = -7.35;
   translate([0, 0, TETE_EPAISSEUR])
@@ -110,7 +114,7 @@ module tete() {
     
 union() {
   branch();
-  translate([0.9 * HYPOTHENUSE, 0, 1.3 * TETE_HAUTEUR])
+  translate([HYPOTHENUSE - 2 * TETE_EPAISSEUR * sin(TETE_ANGLE), 0, 1.3 * TETE_HAUTEUR])
     rotate([90 - TETE_ANGLE,0,90])
     tete();
 }
