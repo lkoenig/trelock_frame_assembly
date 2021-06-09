@@ -48,9 +48,9 @@ module branch_side(ecrou)
     } else {
       // grand trou rond
       translate([
-	BRANCHE_GRAND_TROU / 2 + BRANCHE_PETIT_TROU / 2,
-	  BRANCHE_EPAISSEUR / 2 + 1 ,
-	  BRANCHE_HAUTEUR / 2])
+		 BRANCHE_GRAND_TROU / 2 + BRANCHE_PETIT_TROU / 2,
+		 BRANCHE_EPAISSEUR / 2 + 1 ,
+		 BRANCHE_HAUTEUR / 2])
 	rotate([90, 0, 0])
 	cylinder(h=BOULON_EPAISSEUR + 1, d=BRANCHE_GRAND_TROU);
     }
@@ -78,10 +78,10 @@ module branch() {
 	cube([HYPOTHENUSE/2, BRANCHE_SEPARATION+2, BRANCHE_HAUTEUR]);
     }
 
-    translate([0, -BRANCHE_EPAISSEUR-BRANCHE_SEPARATION/2 - 1, -17])
-      rotate([0,-9, 0])
+    translate([5, -BRANCHE_EPAISSEUR-BRANCHE_SEPARATION/2 - 1, -17])
+      rotate([0,-10.2, 0])
       cube([HYPOTHENUSE * 2, 2*BRANCHE_EPAISSEUR + BRANCHE_SEPARATION + 2,BRANCHE_HAUTEUR+2]);
-}
+  }
 }
   
 module ergot()
@@ -95,13 +95,13 @@ module ergot()
   
 module tete() {
   ERGOT_X = 9;
-  ERGOT_Y = 0;
-  translate([0, 0, TETE_EPAISSEUR])
+  ERGOT_Y = 7.6;
+  translate([0, -7.6, TETE_EPAISSEUR])
     union() {
 
     translate([0,7.6,-TETE_EPAISSEUR])
       linear_extrude(height=TETE_EPAISSEUR, center=false)
-      import("embout.dxf");
+      import("embout.dxf", center=true);
 
     translate([ERGOT_X, ERGOT_Y, 0])
       ergot();
@@ -114,7 +114,7 @@ module tete() {
 union() {
   branch();
   translate([
-	     HYPOTHENUSE - TETE_EPAISSEUR / 2 * sin(TETE_ANGLE),
+	     HYPOTHENUSE - TETE_EPAISSEUR * sin(TETE_ANGLE) / 2,
 	     0,
 	     BRANCHE_HAUTEUR - TETE_HAUTEUR/4
 	     ])
