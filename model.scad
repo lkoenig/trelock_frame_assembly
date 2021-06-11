@@ -44,7 +44,7 @@ module branch_side(ecrou)
       translate([BRANCHE_GRAND_TROU/2+BRANCHE_PETIT_TROU/2,
 		 BRANCHE_EPAISSEUR + 1, BRANCHE_HAUTEUR/2])
 	rotate([90, 0, 0])
-	cylinder(h=BOULON_EPAISSEUR + 1, d=BRANCHE_GRAND_TROU, $fn=6);
+	cylinder(h=BOULON_EPAISSEUR + 1, d=BRANCHE_GRAND_TROU * 2 / sqrt(3), $fn=6);
     } else {
       // grand trou rond
       translate([
@@ -110,7 +110,6 @@ module tete() {
       ergot();
   }
 } 
-    
 union() {
   branch();
   translate([
