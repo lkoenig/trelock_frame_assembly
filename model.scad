@@ -13,7 +13,6 @@ BRANCHE_SEPARATION = 8;
 BOULON_EPAISSEUR = 4;
 
 TETE_EPAISSEUR = 7;
-TETE_ANGLE = 45; 
 TETE_HAUTEUR = 13;
 TETE_LARGEUR = 40;
 TETE_LONGUEUR = 8;
@@ -22,7 +21,9 @@ TETE_ERGOT_TROU = 3;
 TETE_ERGOT_SEPARATION = 12;
 TETE_ERGOT_GRAND_DIAMETRE = (24-TETE_ERGOT_SEPARATION)/2;
 TETE_ERGOT_DEPASSEMENT = 4;
-  
+
+// use <fillets_and_rounds.scad>;
+
 module branch_side(ecrou)
 {
   difference() {
@@ -64,7 +65,6 @@ module branch_side(ecrou)
 }
 
 module branch() {
-  difference() {
     union() {
       translate([0, BRANCHE_SEPARATION/2, 0])
 	branch_side(ecrou=true);
@@ -77,11 +77,6 @@ module branch() {
 		 -BRANCHE_SEPARATION/2-1, 0])
 	cube([HYPOTHENUSE/2, BRANCHE_SEPARATION+2, BRANCHE_HAUTEUR]);
     }
-
-    translate([5, -BRANCHE_EPAISSEUR-BRANCHE_SEPARATION/2 - 1, -17])
-      rotate([0,-10.2, 0])
-      cube([HYPOTHENUSE * 2, 2*BRANCHE_EPAISSEUR + BRANCHE_SEPARATION + 2,BRANCHE_HAUTEUR+2]);
-  }
 }
   
 module ergot()
@@ -110,10 +105,38 @@ module tete() {
       ergot();
   }
 } 
+
+TETE_ANGLE = 45;
+ALPHA = 8;
 union() {
-  branch();
+  difference() {
+    difference() {
+      branch();    
+      translate([
+        BRANCHE_HAUTEUR / 2 * ( 1 + sin(ALPHA)), 
+        0, 
+        BRANCHE_HAUTEUR / 2 *( 1 - cos(ALPHA))])
+      rotate([0,-ALPHA, 0])
+      translate([
+        0 - BRANCHE_HAUTEUR / 2,
+        -(2*BRANCHE_EPAISSEUR + BRANCHE_SEPARATION + 2) / 2,
+        -BRANCHE_HAUTEUR - 2])
+      cube([
+        HYPOTHENUSE + 1,
+        2*BRANCHE_EPAISSEUR + BRANCHE_SEPARATION + 2,
+        BRANCHE_HAUTEUR+2]);
+     }
+    translate([
+	     HYPOTHENUSE - TETE_EPAISSEUR + 0.2,
+	     0,
+	     BRANCHE_HAUTEUR - TETE_HAUTEUR/4
+	     ])
+    rotate([0,  - TETE_ANGLE,0])
+    translate([0, -TETE_LARGEUR / 2, -(TETE_HAUTEUR+ 4)/2])
+    cube([TETE_EPAISSEUR + 2, TETE_LARGEUR, TETE_HAUTEUR + 4]);
+  }
   translate([
-	     HYPOTHENUSE - TETE_EPAISSEUR * sin(TETE_ANGLE) / 2,
+	     HYPOTHENUSE - TETE_EPAISSEUR,
 	     0,
 	     BRANCHE_HAUTEUR - TETE_HAUTEUR/4
 	     ])
