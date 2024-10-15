@@ -1,4 +1,4 @@
-$fn = 500;
+$fn = 300;
 
 HAUTEUR = 46;
 LONGUEUR = HAUTEUR;
@@ -21,6 +21,9 @@ TETE_ERGOT_TROU = 3;
 TETE_ERGOT_SEPARATION = 12;
 TETE_ERGOT_GRAND_DIAMETRE = (24-TETE_ERGOT_SEPARATION)/2;
 TETE_ERGOT_DEPASSEMENT = 4;
+
+TETE_ANGLE = 45;
+ALPHA = 8;
 
 // use <fillets_and_rounds.scad>;
 
@@ -106,8 +109,45 @@ module tete() {
   }
 } 
 
-TETE_ANGLE = 45;
-ALPHA = 8;
+module base_tete() {
+      translate([
+	     HYPOTHENUSE - TETE_EPAISSEUR,
+	     0,
+	     BRANCHE_HAUTEUR - TETE_HAUTEUR/4
+	     ])
+    rotate([90 - TETE_ANGLE,0,90])
+      linear_extrude(height=1, center=false)
+      import("embout.dxf", center=true);
+
+}
+
+module base_branch() {
+    difference() {
+        translate([HYPOTHENUSE/2, - BRANCHE_SEPARATION / 2 -  BRANCHE_EPAISSEUR , 0])
+            cube([1, BRANCHE_SEPARATION + 2 * BRANCHE_EPAISSEUR, BRANCHE_HAUTEUR]);
+          translate([
+        BRANCHE_HAUTEUR / 2 * ( 1 + sin(ALPHA)), 
+        0, 
+        BRANCHE_HAUTEUR / 2 *( 1 - cos(ALPHA))])
+      rotate([0,-ALPHA, 0])
+      translate([
+        0 - BRANCHE_HAUTEUR / 2,
+        -(2*BRANCHE_EPAISSEUR + BRANCHE_SEPARATION + 2) / 2,
+        -BRANCHE_HAUTEUR - 2])
+      cube([
+        HYPOTHENUSE + 1,
+        2*BRANCHE_EPAISSEUR + BRANCHE_SEPARATION + 2,
+        BRANCHE_HAUTEUR+2]);
+     }
+}
+    
+module join_tete_branch() {
+    hull() {
+        base_tete();
+        base_branch();
+    }
+}
+
 union() {
   difference() {
     difference() {
@@ -142,4 +182,6 @@ union() {
 	     ])
     rotate([90 - TETE_ANGLE,0,90])
     tete();
+  
+  join_tete_branch();
 }
